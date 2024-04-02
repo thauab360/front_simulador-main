@@ -48,10 +48,11 @@ const SummaryScreen = ( formData ) => {
       <div className="summary-details">
         {data && (
           <>
+            <p><strong>Como conheceu a Santa Casa Copacabana:</strong> {data.origem}</p>
             <p><strong>Nome:</strong> {data.nome}</p>
             <p><strong>Cidade:</strong> {data.cidade}</p>
-            <p><strong>Tem plano?</strong> {data.temPlano ? 'Sim' : 'Não'}</p>
-            {data.temPlano && <p><strong>Plano:</strong> {data.tPlano}</p>}
+            <p><strong>Tem plano?</strong> {data.tPlano ? 'Sim' : 'Não'}</p>
+            {data.tPlano && <p><strong>Plano:</strong> {data.tPlano}</p>}
             <p><strong>Idade:</strong> {data.idade}</p>
             <p><strong>Sexo:</strong> {data.sexo}</p>
             <p><strong>Plano Desejado:</strong> {data.plano}</p>

@@ -5,6 +5,7 @@ import { Autocomplete, MenuItem, TextField } from "@mui/material";
 import { useHistory } from "react-router-dom";
 
 const SimulationScreen = () => {
+  const [origem, setOrigem] = useState("");
   const [cidades, setCidades] = useState([]);
   const [cidadeSelecionada, setCidadeSelecionada] = useState("");
   const [planoSelecionado, setPlanoSelecionado] = useState("");
@@ -12,11 +13,21 @@ const SimulationScreen = () => {
   const [nome, setNome] = useState("");
   const [telefone, setTelefone] = useState("");
   const [temPlano, setTemPlano] = useState(false);
+  const [temPlanoSelecionado, setTemPlanoSelecionado] = useState("");
   const [idade, setIdade] = useState("");
   const [sexo, setSexo] = useState("");
   const [desejaDependente, setDesejaDependente] = useState(false);
   const [dependentes, setDependentes] = useState([{}]);
   const history = useHistory();
+
+
+  const formatarTelefone = (telefone) => {
+
+    const numerosTelefone = telefone.replace(/\D/g, '');
+
+    // Aplica a máscara de telefone (XX) XXXX-XXXX
+    return numerosTelefone.replace(/^(\d{2})(\d{4,5})(\d{4})$/, '($1) $2-$3');
+  };
 
   useEffect(() => {
     const fetchCidades = async () => {
@@ -40,13 +51,39 @@ const SimulationScreen = () => {
     fetchCidades();
   }, []);
 
+
+  // useEffect(() => {
+  //   const fetchCidades = async () => {
+  //     if (!estadoSelecionado) return;
+  //     try {
+  //       if (codigoEstado === "") return;
+  //       const response = await AxiosInstance.get(
+  //         `https://servicodados.ibge.gov.br/api/v1/localidades/estados/${estadoSelecionado}/municipios`
+  //       );
+  //       if (response.status != 200) {
+  //         throw new Error("Erro ao buscar as cidades");
+  //       }
+
+  //       const data = await response.data;
+
+  //       const cidadesDoEstado = data.map((cidade) => cidade.nome);
+  //       setCidades(cidadesDoEstado);
+  //     } catch (error) {
+  //       console.error("Erro ao buscar as cidades:", error);
+  //     }
+  //   };
+
+  //   fetchCidades();
+  // }, [estadoSelecionado]);
+
   const handleSubmit = async (event) => {
     try {
       const Object = {
+        origem: origem,
         nome: nome,
         celular: telefone,
         cidade: cidadeSelecionada,
-        temPlano: temPlano,
+        temPlano: temPlanoSelecionado,
         plano: planoSelecionado,
         idade: parseInt(idade),
         sexo: sexo,
@@ -55,7 +92,7 @@ const SimulationScreen = () => {
             idade: parseInt(dependente.idade),
             seguro: parseInt(dependente.seguro),
           }
-          
+
           return Obj
 
         }),
@@ -101,6 +138,29 @@ const SimulationScreen = () => {
     <div className="main-container">
       <h2>Simulação</h2>
 
+      <div className="form-group">
+        <TextField
+          select
+          label="Como conheceu a Santa Casa Copacabana?"
+          id="typeText"
+          type="text"
+          value={origem}
+          onChange={(e) => setOrigem(e.target.value)}
+          className="textfield"
+          variant="standard"
+          sx={{ width: "350px" }}
+        >
+          <MenuItem value="TV Record">TV Record</MenuItem>
+          <MenuItem value="Indicação">Indicação</MenuItem>
+          <MenuItem value="Outdoor">Outdoor</MenuItem>
+          <MenuItem value="Facebook">Facebook</MenuItem>
+          <MenuItem value="Instagram">Instagram</MenuItem>
+          <MenuItem value="Site">Site</MenuItem>
+          <MenuItem value="93 FM">93 FM</MenuItem>
+          <MenuItem value="PremiaPão">PremiaPão</MenuItem>
+        </TextField>
+      </div>
+
       <form onSubmit={handleSubmit}>
         <div className="form-group">
           <TextField
@@ -120,7 +180,7 @@ const SimulationScreen = () => {
             id="typeText"
             type="text"
             value={telefone}
-            onChange={(e) => setTelefone(e.target.value)}
+            onChange={(e) => setTelefone(formatarTelefone(e.target.value))}
             className="textfield"
             variant="standard"
           />
@@ -157,7 +217,8 @@ const SimulationScreen = () => {
               label="Qual plano?"
               id="typeText"
               type="text"
-              onChange={(e) => e.target.value}
+              value={temPlanoSelecionado}
+              onChange={(e) => setTemPlanoSelecionado(e.target.value)}
               className="textfield"
               variant="standard"
             />
@@ -225,8 +286,9 @@ const SimulationScreen = () => {
             select
             label="Seguro:"
             id="typeText"
+            disabled={idade > 79}
             type="text"
-            value={seguroSelecionado}
+            value={seguroSelecionado || "false"}
             onChange={(e) => setSeguroSelecionado(e.target.value)}
             className="textfield"
             variant="standard"
@@ -280,6 +342,7 @@ const SimulationScreen = () => {
                     select
                     label="Seguro:"
                     id="typeText"
+                    disabled={dependente.idade > 79}
                     value={dependente.seguro}
                     onChange={(e) => {
                       const novosDependentes = [...dependentes];
