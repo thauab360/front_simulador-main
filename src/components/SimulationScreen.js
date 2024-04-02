@@ -10,11 +10,12 @@ const SimulationScreen = () => {
   const [planoSelecionado, setPlanoSelecionado] = useState("");
   const [seguroSelecionado, setSeguroSelecionado] = useState("");
   const [nome, setNome] = useState("");
+  const [telefone, setTelefone] = useState("");
   const [temPlano, setTemPlano] = useState(false);
   const [idade, setIdade] = useState("");
   const [sexo, setSexo] = useState("");
   const [desejaDependente, setDesejaDependente] = useState(false);
-  const [dependentes, setDependentes] = useState([{ idade: "" }]);
+  const [dependentes, setDependentes] = useState([{}]);
   const history = useHistory();
 
   useEffect(() => {
@@ -35,25 +36,36 @@ const SimulationScreen = () => {
         console.error("Erro ao buscar as cidades:", error);
       }
     };
-    
+
     fetchCidades();
   }, []);
 
   const handleSubmit = async (event) => {
     try {
+      const Object = {
+        nome: nome,
+        celular: telefone,
+        cidade: cidadeSelecionada,
+        temPlano: temPlano,
+        plano: planoSelecionado,
+        idade: parseInt(idade),
+        sexo: sexo,
+        dependentes: dependentes.map((dependente) => {
+          const Obj = {
+            idade: parseInt(dependente.idade),
+            seguro: parseInt(dependente.seguro),
+          }
+          
+          return Obj
+
+        }),
+        seguro: parseInt(seguroSelecionado),
+      }
+
+      console.log(Object)
       const response = await AxiosInstance.post(
         "http://127.0.0.1:5000/form/save",
-        {
-          nome: nome,
-          cidade: cidadeSelecionada,
-          plano: planoSelecionado,
-          idade: idade,
-          sexo: sexo,
-          dependentes: dependentes.map((idade) => {
-            return idade.idade
-          }),
-          seguro: seguroSelecionado,
-        },
+        Object,
         {
           headers: {
             Authorization: `Basic ${localStorage.getItem("accessToken")}`,
@@ -63,14 +75,14 @@ const SimulationScreen = () => {
 
       console.log("Dados salvos com sucesso:", response.data);
       history.push("/summary");
-    
+
     } catch (error) {
       console.error("Erro ao salvar dados:", error);
     }
   };
 
   const handleAddDependente = () => {
-    setDependentes([...dependentes, { idade: ""}]);
+    setDependentes([...dependentes, { idade: "", seguro: "" }]);
   };
 
   const handleRemoveDependente = (index) => {
@@ -97,6 +109,18 @@ const SimulationScreen = () => {
             type="text"
             value={nome}
             onChange={(e) => setNome(e.target.value)}
+            className="textfield"
+            variant="standard"
+          />
+        </div>
+
+        <div className="form-group">
+          <TextField
+            label="Telefone"
+            id="typeText"
+            type="text"
+            value={telefone}
+            onChange={(e) => setTelefone(e.target.value)}
             className="textfield"
             variant="standard"
           />
@@ -195,7 +219,7 @@ const SimulationScreen = () => {
         </div>
 
         <div className="form-group">
-          <TextField 
+          <TextField
             defaultValue={"false"}
             placeholder="Não"
             select
@@ -251,6 +275,27 @@ const SimulationScreen = () => {
                   />
                 </label>
 
+                <label>
+                  <TextField
+                    select
+                    label="Seguro:"
+                    id="typeText"
+                    value={dependente.seguro}
+                    onChange={(e) => {
+                      const novosDependentes = [...dependentes];
+                      novosDependentes[index].seguro = e.target.value;
+                      setDependentes(novosDependentes);
+                    }}
+                    className="textfield"
+                    variant="standard"
+                    sx={{ width: "100px" }}
+                  >
+                    <MenuItem value="false">NÃO</MenuItem>
+                    <MenuItem value="14">PADRÃO</MenuItem>
+                    <MenuItem value="20">ESPECIAL</MenuItem>
+                  </TextField>
+                </label>
+
                 <button
                   type="button"
                   onClick={() => handleRemoveDependente(index)}
@@ -270,9 +315,9 @@ const SimulationScreen = () => {
         )}
 
         <div className="button-group">
-            
-            <button onClick={handleSubmit} type="button">Enviar</button>
-            
+
+          <button onClick={handleSubmit} type="button">Enviar</button>
+
           <button onClick={handleLogout} type="button">Logout</button>
         </div>
       </form>

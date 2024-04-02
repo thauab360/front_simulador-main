@@ -40,6 +40,8 @@ const SummaryScreen = ( formData ) => {
     doc.save('resumo_formulario.pdf');
   };
 
+  console.log(data)
+
   return (
     <div className="summary-container">
       <h2>Resumo da simulação</h2>
@@ -63,7 +65,7 @@ const SummaryScreen = ( formData ) => {
         <p><strong>Subtotal:</strong> R${data.valor}</p>
       </div>
       <div className="buttons-container">
-        <button onClick={handleSavePDF}>Salvar</button>
+        {/* <button onClick={handleSavePDF}>Salvar</button> */}
         
         <button onClick={() => window.location.href = "/simulation"}>Criar Nova Simulação</button>
         
