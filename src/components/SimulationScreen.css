@@ -1,0 +1,83 @@
+.main-container {
+  max-width: 600px;
+  margin: 1% auto;
+  padding: 30px;
+  border-radius: 5px;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+}
+
+h2 {
+  color: #333; 
+  margin-bottom: 20px; 
+}
+
+.form-group {
+  margin-Bottom: 30px;
+}
+
+.form-group label {
+  display: block;
+  margin-bottom: 8px;
+}
+
+.form-group textfield {
+  width: 100%;
+  padding: 8px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  box-sizing: border-box;
+}
+
+.toggle-label {
+  
+  display: flex;
+  align-items: center;
+  margin-bottom: 20px;
+}
+
+.toggle-button {
+  width: 50px;
+  height: 25px;
+  background-color: #ccc;
+  border-radius: 15px;
+  cursor: pointer;
+  position: relative;
+  margin-left: 12px;
+}
+
+.slider {
+  width: 20px;
+  height: 20px;
+  background-color: white;
+  border-radius: 50%;
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  transition: transform 0.2s;
+}
+
+.checked {
+  transform: translateX(25px) translateY(-50%);
+}
+
+.toggle-button:hover .slider {
+  box-shadow: 0 0 5px rgba(0, 0, 0, 0.3);
+}
+
+.dependent-card h3 {
+  border-radius: 5px;
+  padding: 10px;
+  margin-bottom: 10px;
+}
+
+.toggle-button:hover .slider {
+  box-shadow: 0 0 5px rgba(0, 0, 0, 0.3);
+}
+
+.button-group button {
+  margin: 30px 0 0px 20px;
+}
+
+button {
+  margin: 10px 0 0px 5px;
+}
