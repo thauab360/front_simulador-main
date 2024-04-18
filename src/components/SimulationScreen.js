@@ -90,7 +90,7 @@ const SimulationScreen = () => {
       );
 
       console.log("Dados salvos com sucesso:", response.data);
-      history.push("/summary");
+      history.push("/summary", { Object, dependentes });
 
     } catch (error) {
       console.error("Erro ao salvar dados:", error);

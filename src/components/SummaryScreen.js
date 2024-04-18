@@ -1,12 +1,20 @@
 import React, { useState, useEffect } from 'react';
-import { useHistory } from "react-router-dom";
+import { useHistory, useLocation } from "react-router-dom";
 import AxiosInstance from '../core/axiosInstance';
 import jsPDF from 'jspdf';
 import './SummaryScreen.css';
 
+
 const SummaryScreen = ( formData ) => {
   const [data, setData] = useState({});
   const history = useHistory();
+  const location = useLocation();
+
+  let dados = location.state.Object;
+  let dadosDependentes = location.state.dependentes;
+
+  console.log('Recuperando dados', dados);
+  console.log('Recuperando dados de dependentes', dadosDependentes);
 
   useEffect( async () => {
     console.log(localStorage.getItem("accessToken"))
@@ -60,12 +68,19 @@ const SummaryScreen = ( formData ) => {
             {data.desejaSeguro && <p><strong>Seguro:</strong> {data.seguro}</p>}
             <p><strong>Deseja Clube de Benefícios?</strong> {data.desejaClubeBeneficios === 'true' ? 'Sim' : 'Não'}</p>
             <p><strong>Dependentes?</strong> {data.quantidade_dependentes>0 ? data.quantidade_dependentes : 'Não'}</p>
-            
+            {dadosDependentes.map((dadosDep, index) => (
+              <div key={index}>
+                <p><strong>Idade do dependente {index + 1}:</strong> {dadosDep.idade}</p>
+                <p><strong>Seguro do dependente {index + 1}:</strong> R${dadosDep.seguro}</p>
+                <p><strong>Clube de Benefícios do dependente {index + 1}:</strong> {dadosDep.desejaClubeBeneficios === 'true' ? 'Sim' : 'Não'}</p>
+                <hr/>
+              </div>
+            ))}
           </>
         )}
       </div>
       <div className="subtotal">
-        <p><strong>Subtotal:</strong> R${data.valor}</p>
+        <p><strong>Total:</strong> R${data.valor}</p>
       </div>
       <div className="buttons-container">
         
