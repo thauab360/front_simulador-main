@@ -58,7 +58,9 @@ const SummaryScreen = ( formData ) => {
             <p><strong>Plano Desejado:</strong> {data.plano}</p>
             <p><strong>Seguro:</strong> {data.seguro>0 ? `R$${data.seguro}` : 'Não'}</p>
             {data.desejaSeguro && <p><strong>Seguro:</strong> {data.seguro}</p>}
+            <p><strong>Deseja Clube de Benefícios?</strong> {data.desejaClubeBeneficios === 'true' ? 'Sim' : 'Não'}</p>
             <p><strong>Dependentes?</strong> {data.quantidade_dependentes>0 ? data.quantidade_dependentes : 'Não'}</p>
+            
           </>
         )}
       </div>
@@ -66,7 +68,6 @@ const SummaryScreen = ( formData ) => {
         <p><strong>Subtotal:</strong> R${data.valor}</p>
       </div>
       <div className="buttons-container">
-        {/* <button onClick={handleSavePDF}>Salvar</button> */}
         
         <button onClick={() => window.location.href = "/simulation"}>Criar Nova Simulação</button>
         

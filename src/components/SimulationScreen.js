@@ -18,6 +18,8 @@ const SimulationScreen = () => {
   const [sexo, setSexo] = useState("");
   const [desejaDependente, setDesejaDependente] = useState(false);
   const [dependentes, setDependentes] = useState([{}]);
+  const [desejaClubeBeneficios, setDesejaClubeBeneficios] = useState(false);
+
   const history = useHistory();
 
 
@@ -51,31 +53,6 @@ const SimulationScreen = () => {
     fetchCidades();
   }, []);
 
-
-  // useEffect(() => {
-  //   const fetchCidades = async () => {
-  //     if (!estadoSelecionado) return;
-  //     try {
-  //       if (codigoEstado === "") return;
-  //       const response = await AxiosInstance.get(
-  //         `https://servicodados.ibge.gov.br/api/v1/localidades/estados/${estadoSelecionado}/municipios`
-  //       );
-  //       if (response.status != 200) {
-  //         throw new Error("Erro ao buscar as cidades");
-  //       }
-
-  //       const data = await response.data;
-
-  //       const cidadesDoEstado = data.map((cidade) => cidade.nome);
-  //       setCidades(cidadesDoEstado);
-  //     } catch (error) {
-  //       console.error("Erro ao buscar as cidades:", error);
-  //     }
-  //   };
-
-  //   fetchCidades();
-  // }, [estadoSelecionado]);
-
   const handleSubmit = async (event) => {
     try {
       const Object = {
@@ -91,15 +68,17 @@ const SimulationScreen = () => {
           const Obj = {
             idade: parseInt(dependente.idade),
             seguro: parseInt(dependente.seguro),
+            desejaClubeBeneficios: dependente.desejaClubeBeneficios,
           }
 
           return Obj
 
         }),
         seguro: parseInt(seguroSelecionado),
+        desejaClubeBeneficios: desejaClubeBeneficios,
       }
 
-      console.log(Object)
+      //console.log(Object)
       const response = await AxiosInstance.post(
         "http://127.0.0.1:5000/form/save",
         Object,
@@ -119,7 +98,7 @@ const SimulationScreen = () => {
   };
 
   const handleAddDependente = () => {
-    setDependentes([...dependentes, { idade: "", seguro: "" }]);
+    setDependentes([...dependentes, { idade: "", seguro: "", desejaClubeBeneficios: false }]);
   };
 
   const handleRemoveDependente = (index) => {
@@ -226,7 +205,7 @@ const SimulationScreen = () => {
         )}
         <div className="form-group">
           <TextField
-            label="Idade"
+            label="Idade:"
             id="typeText"
             type="text"
             value={idade}
@@ -237,7 +216,7 @@ const SimulationScreen = () => {
             }}
             className="textfield"
             variant="standard"
-            sx={{ width: "45px" }}
+            sx={{ width: "50px" }}
           />
         </div>
 
@@ -294,10 +273,17 @@ const SimulationScreen = () => {
             variant="standard"
             sx={{ width: "100px" }}
           >
-            <MenuItem value="false">NÃO</MenuItem>
-            <MenuItem value="14">PADRÃO</MenuItem>
-            <MenuItem value="20">ESPECIAL</MenuItem>
+            <MenuItem value="false">Não</MenuItem>
+            <MenuItem value="14">Padrão</MenuItem>
+            <MenuItem value="20">Especial</MenuItem>
           </TextField>
+        </div>
+
+        <div className="form-group toggle-label">
+          Deseja clube de benefícios?
+          <div className="toggle-button" onClick={() => setDesejaClubeBeneficios(!desejaClubeBeneficios)}>
+            <div className={`slider ${desejaClubeBeneficios ? "checked" : ""}`}></div>
+          </div>
         </div>
 
         <div className="form-group toggle-label">
@@ -333,7 +319,7 @@ const SimulationScreen = () => {
                     }}
                     className="textfield"
                     variant="standard"
-                    sx={{ width: "45px" }}
+                    sx={{ width: "50px" }}
                   />
                 </label>
 
@@ -353,11 +339,22 @@ const SimulationScreen = () => {
                     variant="standard"
                     sx={{ width: "100px" }}
                   >
-                    <MenuItem value="false">NÃO</MenuItem>
-                    <MenuItem value="14">PADRÃO</MenuItem>
-                    <MenuItem value="20">ESPECIAL</MenuItem>
+                    <MenuItem value="false">Não</MenuItem>
+                    <MenuItem value="14">Padrão</MenuItem>
+                    <MenuItem value="20">Especial</MenuItem>
                   </TextField>
                 </label>
+
+                <div className="form-group toggle-label">
+                  Deseja clube de benefícios?
+                  <div className="toggle-button" onClick={() => {
+                      const novosDependentes = [...dependentes];
+                      novosDependentes[index].desejaClubeBeneficios = !dependente.desejaClubeBeneficios;
+                      setDependentes(novosDependentes);
+                  }}>
+                    <div className={`slider ${dependente.desejaClubeBeneficios ? "checked" : ""}`}></div>
+                  </div>
+                </div>
 
                 <button
                   type="button"
